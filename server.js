@@ -16,6 +16,9 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Trust Render's reverse proxy so secure session cookies work correctly.
+app.set('trust proxy', 1);
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(
