@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Manage your income, expenses, and financial goals with Expense Tracker.">
+    <title>Expense Tracker | Dashboard</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <aside class="sidebar">
+        <a href="/" class="brand">
+            <span class="brand-icon">₦</span>
+            <span>Expense<span class="brand-light">Tracker</span></span>
+        </a>
+
+        <p class="nav-label">MENU</p>
+        <nav>
+            <a href="#dashboard" class="nav-link active">▦ <span>Dashboard</span></a>
+            <a href="#transactions" class="nav-link">↔ <span>Transactions</span></a>
+            <a href="#reports" class="nav-link">▥ <span>Reports</span></a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="profile-avatar">EF</div>
+            <div>
+                <strong>My Account</strong>
+                <small>Personal Finance</small>
+                <button id="logoutBtn" class="logout-btn" type="button">
+                    Log Out
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content" id="dashboard">
+        <header class="topbar">
+            <div>
+                <p class="eyebrow">PERSONAL FINANCE</p>
+                <h1>Dashboard</h1>
+                <p class="subtitle">Track your money. Make better decisions.</p>
+            </div>
+            <button class="primary-button" id="addTransactionBtn" type="button">
+                + Add Transaction
+            </button>
+        </header>
+
+        <!-- Dashboard Summary Cards -->
+        <section class="summary-grid" aria-label="Financial summary">
+            <article class="summary-card balance-card">
+                <div class="card-heading">
+                    <span>Total Balance</span>
+                    <span class="card-icon">₦</span>
+                </div>
+                <h2 id="balance">₦0.00</h2>
+                <p>Income minus expenses</p>
+            </article>
+
+            <article class="summary-card">
+                <div class="card-heading">
+                    <span>Total Income</span>
+                    <span class="card-icon income-icon">↗</span>
+                </div>
+                <h2 id="income">₦0.00</h2>
+                <p>All recorded income</p>
+            </article>
+
+            <article class="summary-card">
+                <div class="card-heading">
+                    <span>Total Expenses</span>
+                    <span class="card-icon expense-icon">↘</span>
+                </div>
+                <h2 id="expenses">₦0.00</h2>
+                <p>All recorded expenses</p>
+            </article>
+
+            <article class="summary-card">
+                <div class="card-heading">
+                    <span>Transactions</span>
+                    <span class="card-icon transaction-icon">⇄</span>
+                </div>
+                <h2 id="transactionCount">0</h2>
+                <p>Recorded transactions</p>
+            </article>
+        </section>
+
+        <!-- Financial Reports -->
+        <section class="report-controls" id="financialReports">
+            <div>
+                <h2>Financial Reports</h2>
+                <p>Review your income and expenses by month.</p>
+            </div>
+
+            <label for="reportMonth">Select month</label>
+            <input type="month" id="reportMonth">
+
+            <button type="button" id="resetReportBtn">View All</button>
+            <button type="button" id="exportCsvBtn">Export CSV</button>
+            <button type="button" id="exportPdfBtn">Download PDF</button>
+        </section>
+
+        <section class="report-summary" aria-label="Financial report summary">
+            <article class="summary-card">
+                <h3>Report Income</h3>
+                <p id="reportIncome">₦0.00</p>
+            </article>
+
+            <article class="summary-card">
+                <h3>Report Expenses</h3>
+                <p id="reportExpenses">₦0.00</p>
+            </article>
+
+            <article class="summary-card">
+                <h3>Report Savings</h3>
+                <p id="reportSavings">₦0.00</p>
+            </article>
+        </section>
+
+        <!-- Charts -->
+        <section class="content-grid">
+            <article class="panel" id="reports">
+                <div class="panel-heading">
+                    <div>
+                        <h2>Financial Overview</h2>
+                        <p>Your income compared with your expenses</p>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="overviewChart" aria-label="Income and expenses chart"></canvas>
+                </div>
+            </article>
+
+            <article class="panel">
+                <div class="panel-heading">
+                    <div>
+                        <h2>Expense Breakdown</h2>
+                        <p>Spending by category</p>
+                    </div>
+                </div>
+                <div class="chart-container doughnut-container">
+                    <canvas id="categoryChart" aria-label="Expense categories chart"></canvas>
+                </div>
+                <p class="empty-note" id="categoryEmpty">
+                    Your expense categories will appear here.
+                </p>
+            </article>
+        </section>
+
+        <!-- Transactions Table -->
+        <section class="panel transactions-panel" id="transactions">
+            <div class="panel-heading transaction-heading">
+                <div>
+                    <h2>Recent Transactions</h2>
+                    <p>Your latest income and expenses</p>
+                </div>
+                <button class="secondary-button" id="viewAllBtn" type="button">
+                    View All
+                </button>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Description</th>
+                            <th>Category</th>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th class="amount-column">Amount</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transactionList">
+                        <tr>
+                            <td colspan="6" class="empty-state">
+                                Loading transactions...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <footer>
+            <p>Expense Tracker &copy; 2026 · Take control of your finances.</p>
+        </footer>
+    </main>
+
+    <!-- Add/Edit Transaction Dialog -->
+    <dialog id="transactionDialog">
+        <form id="transactionForm">
+            <input type="hidden" id="transactionId">
+
+            <div class="dialog-heading">
+                <div>
+                    <p class="eyebrow">FINANCIAL RECORD</p>
+                    <h2>Add Transaction</h2>
+                </div>
+                <button type="button" class="close-button" id="closeDialog" aria-label="Close">×</button>
+            </div>
+
+            <label for="description">Description</label>
+            <input id="description" name="description" type="text" placeholder="e.g. Monthly salary" maxlength="100"
+                required>
+
+            <label for="type">Transaction type</label>
+            <select id="type" name="type" required>
+                <option value="expense">Expense</option>
+                <option value="income">Income</option>
+            </select>
+
+            <label for="amount">Amount (₦)</label>
+            <input id="amount" name="amount" type="number" min="0.01" step="0.01" placeholder="0.00" required>
+
+            <label for="category">Category</label>
+            <select id="category" name="category" required>
+                <option value="Food">Food</option>
+                <option value="Transport">Transport</option>
+                <option value="Housing">Housing</option>
+                <option value="Utilities">Utilities</option>
+                <option value="Salary">Salary</option>
+                <option value="Business">Business</option>
+                <option value="Education">Education</option>
+                <option value="Healthcare">Healthcare</option>
+                <option value="Shopping">Shopping</option>
+                <option value="Other">Other</option>
+            </select>
+
+            <label for="date">Date</label>
+            <input id="date" name="date" type="date" required>
+
+            <p class="form-error" id="formError" role="alert"></p>
+
+            <button type="submit" class="primary-button submit-button">
+                Save Transaction
+            </button>
+        </form>
+    </dialog>
+
+    <!-- Load Chart.js before the dashboard JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/js/app.js"></script>
+</body>
+
+</html>
